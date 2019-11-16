@@ -1,42 +1,27 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchEvents, fetchNextPage, fetchPrevPage } from "../actions/index";
 
 const Home = () => {
-  const [data, setData] = useState({ events: [] });
+  const data = useSelector(state => state);
+  console.log(data.page);
+  const dispatch = useDispatch();
   const [query, setQuery] = useState("");
-  const [page, setPage] = useState(0);
-  const [url, setUrl] = useState(
-    `https://app.ticketmaster.com/discovery/v2/events.json?keyword=${query}&page=${page}&size=20&apikey=lry7krbABlWRHt4YpxfSjudOeTi2cZs3`
-  );
+  /*useEffect(()=>{
+    dispatch(fetchEvents(query))
+  },[dispatch,query])*/
+
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsError(false);
-      setIsLoading(true);
-      try {
-        const result = await axios(url);
-        setData(result.data._embedded);
-      } catch (error) {
-        setIsError(true);
-      }
-      setIsLoading(false);
-    };
-    fetchData();
-  }, [url]);
-  const nextPage = () => {
-    setPage(page + 1);
-    setUrl(
-      `https://app.ticketmaster.com/discovery/v2/events.json?keyword=${query}&page=${page}&size=20&apikey=lry7krbABlWRHt4YpxfSjudOeTi2cZs3`
-    );
+  const getData = () => {
+    dispatch(fetchEvents(query, data.page));
   };
-  const previousPage = () => {
-    setPage(page - 1);
-    console.log(page);
-    setUrl(
-      `https://app.ticketmaster.com/discovery/v2/events.json?keyword=${query}&page=${page}&size=20&apikey=lry7krbABlWRHt4YpxfSjudOeTi2cZs3`
-    );
+  const nextPage = () => {
+    dispatch(fetchNextPage(query, data.page));
+  };
+  const prevPage = () => {
+    dispatch(fetchPrevPage(query, data.page));
   };
   return (
     <div style={{ margin: "10%" }}>
@@ -44,18 +29,12 @@ const Home = () => {
         type="text"
         value={query}
         onChange={event => setQuery(event.target.value)}
+        placeholder="e.g.concerts,nba"
       />
-      <button
-        type="button"
-        onClick={() => {
-          setUrl(
-            `https://app.ticketmaster.com/discovery/v2/events.json?keyword=${query}&page=${page}&size=20&apikey=lry7krbABlWRHt4YpxfSjudOeTi2cZs3`
-          );
-        }}
-      >
+      <button type="button" onClick={getData}>
         Search Event
       </button>
-      <div>{`Page  ${page + 1}`}</div>
+      <div>{`Page  ${data.page + 1}`}</div>
       {isError && <div>You probably search with a non-exist keyword..</div>}
       {isLoading ? (
         <div>Loading..</div>
@@ -65,7 +44,7 @@ const Home = () => {
         >
           <thead>
             <tr style={{ border: "1px solid black" }}>
-            <th scope="col" style={{ border: "1px solid black" }}>
+              <th scope="col" style={{ border: "1px solid black" }}>
                 Image
               </th>
               <th scope="col" style={{ border: "1px solid black" }}>
@@ -83,10 +62,17 @@ const Home = () => {
             </tr>
           </thead>
           {data &&
-            data.events.map(({ id, name, dates }) => (
+            data.events.map(({ id, name, dates, images }) => (
               <tbody key={id}>
                 <tr style={{ border: "1px solid black" }}>
-                <td></td>
+                  <td>
+                    <img
+                      width={100}
+                      height={56}
+                      alt="Event poster"
+                      src={images[0]["url"]}
+                    />
+                  </td>
                   <td style={{ border: "1px solid black" }}>{name}</td>
                   <td style={{ border: "1px solid black" }}>
                     {dates.start.localDate}
@@ -106,8 +92,8 @@ const Home = () => {
             ))}
         </table>
       )}
-      <button onClick={() => previousPage(page)}>Previous</button>
-      <button onClick={() => nextPage(page)}>Next</button>
+      <button onClick={prevPage}>Prev</button>
+      <button onClick={nextPage}>Next</button>
     </div>
   );
 };

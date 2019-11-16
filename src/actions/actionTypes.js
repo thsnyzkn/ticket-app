@@ -1,1 +1,5 @@
 export const FETCH_EVENT = 'FETCH_EVENT'
+export const SEARCH_ITEM = 'SEARCH_ITEM'
+export const PAGINATE_NEXT = 'PAGINATE_NEXT'
+export const PAGINATE_PREV = 'PAGINATE_PREV'
+export const PAGE_NUMBER = 'PAGE_NUMBER'
