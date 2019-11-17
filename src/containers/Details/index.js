@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 
 const Details = () => {
   let { id } = useParams();
+  
   const [details, setDetails] = useState({ details: [] });
   const [images, setImages] = useState({ images: [] });
   const [isLoading, setIsLoading] = useState(false);
+  const { name,priceRanges } = details;
+
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
@@ -22,21 +26,27 @@ const Details = () => {
       } catch (error) {}
       setIsLoading(false);
     };
-    console.log(images);
+  
     fetchData();
   }, [id, details, images]);
-
-  console.log("images", Object.values(images)[4]);
-  const {name} = details
+  
   return (
-    <div>
-      {name}
-      <img
-        width={100}
-        height={56}
-        alt="Event poster"
-        src={Object.values(images)[0]["url"]}
-      />
+    <div class="wrapper section">
+      <div class="box is-large">
+        <ul>
+        <li>
+            <img
+              width={100}
+              height={56}
+              alt="Event poster"
+              src={Object.values(images)[0]["url"]}
+            />
+          </li>
+          <li> {name}</li>
+        
+        
+        </ul>
+      </div>
     </div>
   );
 };
