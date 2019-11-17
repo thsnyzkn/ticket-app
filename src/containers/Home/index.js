@@ -86,11 +86,14 @@ const Home = () => {
               <tr>
                 <th scope="col">Image</th>
                 <th scope="col">Name</th>
+                <th scope="col">Date</th>
+                <th scope="col">Time</th>
+               
                 <th scope="col">Details</th>
               </tr>
             </thead>
             {data &&
-              data.events.map(({ id, name, images }) => (
+              data.events.map(({ id, name, images,dates,priceRanges }) => (
                 <tbody key={id} class="is-bordered">
                   <tr>
                     <td>
@@ -102,11 +105,13 @@ const Home = () => {
                       />
                     </td>
                     <td>{name}</td>
+                    <td> {dates.start.localDate}</td>
+                    <td>{dates.start.localTime}</td>
+                   
                     <td>
                       <Link to={`/ticket-details/${id}`}>
                         <button
                           className="button is-small is-outlined is-danger"
-                          
                         >
                           Go to Details
                         </button>
