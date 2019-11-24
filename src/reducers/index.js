@@ -22,7 +22,6 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         events: action.events,
-        query:action.query,
         page:0,
         loading:false
       };
@@ -45,7 +44,6 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         page: action.page,
-        
         events: action.events,
         loading:false
       };
@@ -53,7 +51,6 @@ export const reducer = (state = initialState, action) => {
       return {
         ...state,
         page: action.page,
-      
         events: action.events,
         loading:false
       };

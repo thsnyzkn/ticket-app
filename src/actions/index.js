@@ -14,12 +14,15 @@ const BASE_API = `https://app.ticketmaster.com/discovery/v2/events.json?apikey=l
 
 export const fetchEvents = (query,page) => {
   return async dispatch => {
+    dispatch(search(query))
     dispatch(fetchBegins())
     try {
       const result = await axios.get(
         `${BASE_API}&keyword=${query}&page=${page}`
       );
+    
       dispatch(setEvents(result.data._embedded.events,query,page));
+     
     } catch (error) {
       const err = dispatch(fetchFailure(error))
       throw err.response
@@ -45,6 +48,7 @@ export const fetchNextPage = (query,page) => {
 export const fetchPrevPage = (query,page) => {
   return async dispatch => {
     dispatch(setPage(page--))
+    dispatch(search(query))
     dispatch(fetchBegins())
     try {
       const result = await axios.get(
@@ -117,11 +121,11 @@ const setDetails = (event,id) => {
     id
   }
 }
-const setEvents = (events,query,page) => {
+const setEvents = (events,page) => {
   return {
     type: FETCH_EVENT_SUCCESS,
     events,
-    query,
+
     page
   };
 };

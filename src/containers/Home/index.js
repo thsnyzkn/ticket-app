@@ -10,7 +10,7 @@ const Home = () => {
   const data = useSelector(state => state);
  
   const { page, loading, error } = data;
-  console.log(page);
+
   const dispatch = useDispatch();
   const [query, setQuery] = useState("");
   useEffect(() => {
@@ -18,10 +18,11 @@ const Home = () => {
   }, [data.query]);
 
   const handleChange = event => {
-    const { value } = event.target;
+    const { value } =  event.target;
     setQuery(value);
   };
   const getData = event => {
+    console.log("QUERY",query)
     dispatch(fetchEvents(query, page));
   };
   const nextPage = () => {
