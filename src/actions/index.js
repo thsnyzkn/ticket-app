@@ -18,7 +18,7 @@ export const fetchEvents = (query,page) => {
     dispatch(fetchBegins())
     try {
       const result = await axios.get(
-        `${BASE_API}&keyword=${query}&page=${page}`
+        `${BASE_API}&keyword=${query}&page=${0}`
       );
     
       dispatch(setEvents(result.data._embedded.events,query,page));
